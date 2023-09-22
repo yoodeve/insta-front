@@ -7,7 +7,7 @@ import SideBar from "../../SideBar/SideBar";
 function RootLayout(props) {
   return (
     <div css={S.SLayout}>
-      <SideBar />
+      {/* <SideBar /> */}
       <Outlet />
     </div>
   );
