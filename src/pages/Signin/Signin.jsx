@@ -1,8 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SigninupLayout from "../../components/Layouts/Signin_up/SigninupLayout";
+import Top from "../../components/Layouts/Signin_up/Top/Top";
+import Input from "../../components/Layouts/Signin_up/Input/Input";
+import OrBar from "../../components/Layouts/Signin_up/OrBar/OrBar";
+import { signin } from "../../api/account";
 
 function Signin(props) {
-  return <SigninupLayout></SigninupLayout>;
+  const emptyAccount = {
+    phoneOrEmailOrUsername: "",
+    loginPassword: "",
+  };
+
+  const [account, setAccount] = useState(emptyAccount);
+  const [isComplete, setIsComplete] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onAccountChange = (name, value) => {
+    setAccount({ ...account, [name]: value });
+  };
+
+  const loginOnClick = async () => {
+    try {
+      await signin(account);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    setIsComplete(Object.values(account).includes(""));
+  }, [account]);
+
+  return (
+    <SigninupLayout>
+      <div>
+        <Top>
+          <Input
+            placeholder="전화번호, 사용자이름 또는 이메일"
+            changeAccount={onAccountChange}
+            name="phoneOrEmailOrUsername"
+          />
+          <Input
+            placeholder="비밀번호"
+            changeAccount={onAccountChange}
+            name="loginPassword"
+            type="password"
+          />
+          <button onClick={loginOnClick} disabled={isComplete}>
+            로그인
+          </button>
+          <OrBar />
+          <div style={{ textAlign: "center" }}>kakao로 로그인</div>
+        </Top>
+      </div>
+    </SigninupLayout>
+  );
 }
 
 export default Signin;
