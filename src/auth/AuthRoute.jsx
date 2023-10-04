@@ -1,22 +1,36 @@
-import React, { useState } from "react";
-import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { Navigate, useLocation } from "react-router-dom";
+import { authenticate } from "../api/account";
+import Loading from "../components/Loading/Loading";
 
 function AuthRoute({ element }) {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const pathname = location.pathname;
   const permitAllPath = ["/accounts"];
-  const [authenticated, setAuthenticated] = useState(false);
+
+  const authenticateState = useQuery(["authenticate"], authenticate, {
+    retry: 0,
+    refetchOnWindowFocus: false,
+  });
+
+  if (authenticateState.isLoading) {
+    console.log("로딩 중...");
+    return <Loading />;
+  }
+
+  if (authenticateState.isError) {
+    for (let path of permitAllPath) {
+      if (pathname.startsWith(path)) {
+        return element;
+      }
+    }
+    return <Navigate to={"/accounts/login"} />;
+  }
 
   for (let path of permitAllPath) {
     if (pathname.startsWith(path)) {
-      if (authenticated) {
-        return <Navigate to="/" />;
-      }
-      return element;
+      return <Navigate to={"/"} />;
     }
-  }
-
-  if (!authenticated) {
-    <Navigate to="/accounts/login" />;
   }
 
   return element;

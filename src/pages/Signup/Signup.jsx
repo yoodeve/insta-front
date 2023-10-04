@@ -6,6 +6,9 @@ import Input from "../../components/Layouts/Signin_up/Input/Input";
 import OrBar from "../../components/Layouts/Signin_up/OrBar/OrBar";
 import { signup } from "../../api/account";
 import { useNavigate } from "react-router-dom";
+import { SButton } from "../../components/Layouts/Signin_up/Bottom.jsx/style";
+
+/** @jsxImportSource @emotion/react */
 
 function Signup(props) {
   const navigate = useNavigate();
@@ -29,8 +32,10 @@ function Signup(props) {
       setErrorMessage("");
       navigate("/accounts/login");
     } catch (error) {
-      console.log("오류");
-      const responseErrMsg = error.response.data;
+      const responseErrMsg =
+        error.response.data.phone || error.response.data.email;
+      console.log(responseErrMsg);
+      alert(responseErrMsg);
       const keyList = Object.keys(responseErrMsg);
       if (keyList.includes("username")) {
         setErrorMessage(responseErrMsg.username);
@@ -46,14 +51,13 @@ function Signup(props) {
 
   useEffect(() => {
     setIsComplete(Object.values(account).includes(""));
-    console.log(isComplete);
   }, [account]);
 
   return (
     <SigninupLayout>
       <Top>
         <div>친구들의 사진과 동영상을 보려면 가입하세요.</div>
-        <button>Kakao로 로그인</button>
+        <button css={SButton}>Kakao로 로그인</button>
         <OrBar />
         <div>
           <Input

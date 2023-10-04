@@ -3,11 +3,15 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { Reset } from "styled-reset";
-
+import { RecoilRoot } from "recoil";
+import { QueryClient, QueryClientProvider } from "react-query";
+const queryClient = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <>
-    <Reset />
-    <App />
-  </>
+  <QueryClientProvider client={queryClient}>
+    <RecoilRoot>
+      <Reset />
+      <App />
+    </RecoilRoot>
+  </QueryClientProvider>
 );

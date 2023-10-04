@@ -6,6 +6,7 @@ import { Common } from "./styles/Global/common";
 import Signup from "./pages/Signup/Signup";
 import Signin from "./pages/Signin/Signin";
 import AuthRoute from "./auth/AuthRoute";
+import Home from "./pages/Home/Home";
 
 function App(props) {
   return (
@@ -14,7 +15,7 @@ function App(props) {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<RootLayout />}>
-            <Route index element={<>Home</>} />
+            <Route index element={<AuthRoute element={<Home />} />} />
             <Route
               path="/accounts/emailsignup"
               element={<AuthRoute element={<Signup />} />}

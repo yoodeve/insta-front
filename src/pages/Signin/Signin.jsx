@@ -4,6 +4,9 @@ import Top from "../../components/Layouts/Signin_up/Top/Top";
 import Input from "../../components/Layouts/Signin_up/Input/Input";
 import OrBar from "../../components/Layouts/Signin_up/OrBar/OrBar";
 import { signin } from "../../api/account";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { rc_authRouteState } from "../../store/atoms/authRouteState";
 
 function Signin(props) {
   const emptyAccount = {
@@ -14,6 +17,7 @@ function Signin(props) {
   const [account, setAccount] = useState(emptyAccount);
   const [isComplete, setIsComplete] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [authRouteState, setAuthRouteState] = useRecoilState(rc_authRouteState);
 
   const onAccountChange = (name, value) => {
     setAccount({ ...account, [name]: value });
@@ -21,7 +25,10 @@ function Signin(props) {
 
   const loginOnClick = async () => {
     try {
-      await signin(account);
+      const response = await signin(account);
+      localStorage.setItem("accessToken", `Bearer ${response.data}`);
+      setAuthRouteState(true);
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
